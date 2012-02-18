@@ -8,7 +8,11 @@ exports.widget = function(req, res){
     var userid = req.params.userid;
     
     var feed = new HeartFeed(userid);
-    var hearts = feed.get();
 
-    res.render('widget', { title: userid, hearts: hearts })
+    req.pause();
+
+    feed.get(6, function(hearts) { 
+        req.resume();
+        res.render('widget', { title: userid, hearts: hearts });
+    });    
 };

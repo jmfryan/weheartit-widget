@@ -1,27 +1,49 @@
+var FeedParser = require('feedparser')
+
 HeartFeed = function(username) {
     if(username === undefined)
-        throw "Must contruct a HeartFeed by passing a username."
+        throw "Must contruct a HeartFeed by passing a username.";
 
     this.username = username;
 };
 
-HeartFeed.prototype.get = function(count) {
-    count = count || 6;
+HeartFeed.prototype._getBigImage = function(description) {
+    var regex = /src="(.*)_large\.(.*)"/
+    var match = regex.exec(description);
+    return match[1] + "_large." + match[2];};
 
+HeartFeed.prototype._getThumbnail = function(description) {
+    var regex = /src="(.*)_large\.(.*)"/
+    var match = regex.exec(description);
+    return match[1] + "_tiny." + match[2];
+};
+
+HeartFeed.prototype.get = function(count, finished) {
+    var self = this;
+
+    count = count || 6;
     var ret = [];
 
-    for (var i = 0; i < count; i++) {
+
+    parser = new FeedParser();
+    var downloaded = 0;
+
+    parser.on('article', function(article){ 
+        if(downloaded === count)
+            return;
+        
+        downloaded++;
+
         var item = {
-            title: "A CUP OF JO: Bright pink lipstick",
-            link: "http://weheartit.com/entry/23308749",
-            big_image: "http://data.whicdn.com/images/23308749/bright-pink-lipstick_large.jpg",
-            thumbnail: "http://data.whicdn.com/images/23308749/bright-pink-lipstick_tiny.jpg"
+            title: article.title,
+            link: article.link,
+            big_image: self._getBigImage(article.description),
+            thumbnail: self._getThumbnail(article.description)
         };
-
         ret.push(item);
-    };
-
-    return ret;
+    });
+    
+    parser.parseFile('http://weheartit.com/'+ this.username + '.rss', function() { finished(ret) });
 };
 
 exports.HeartFeed = HeartFeed;
