@@ -6,13 +6,11 @@ HeartFeed = require("../model/weheartit-feed.js").HeartFeed;
 
 exports.widget = function(req, res){
     var userid = req.params.userid;
+    var imagecount = req.params.imagecount;
     
     var feed = new HeartFeed(userid);
 
-    req.pause();
-
-    feed.get(6, function(hearts) { 
-        req.resume();
-        res.render('widget', { title: userid, hearts: hearts });
+    feed.get(function(hearts) { 
+        res.render('widget', { title: userid, hearts: hearts.slice(0, imagecount) });
     });    
 };

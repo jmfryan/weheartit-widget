@@ -18,22 +18,13 @@ HeartFeed.prototype._getThumbnail = function(description) {
     return match[1] + "_tiny." + match[2];
 };
 
-HeartFeed.prototype.get = function(count, finished) {
+HeartFeed.prototype.get = function(finished) {
     var self = this;
-
-    count = count || 6;
     var ret = [];
 
-
     parser = new FeedParser();
-    var downloaded = 0;
 
     parser.on('article', function(article){ 
-        if(downloaded === count)
-            return;
-        
-        downloaded++;
-
         var item = {
             title: article.title,
             link: article.link,
