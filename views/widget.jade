@@ -1,0 +1,13 @@
+#widget
+    ul.hearts
+        - hearts.forEach(function(item){
+            li
+                a(href= item.link)
+                    img(src= item.thumbnail)
+        - })
+    .clearfix
+    .footer
+        a(href="http://weheartit.com/seedlinginspirations" 
+            target="_parent")
+            img(alt="Weheartit_widget"
+                src="http://assets.whicdn.com/assets/weheartit_widget-a4073e0a4e3160ba2d24dfec5681f964.png")
