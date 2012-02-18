@@ -11,6 +11,6 @@ exports.widget = function(req, res){
     var feed = new HeartFeed(userid);
 
     feed.get(function(hearts) { 
-        res.render('widget', { title: userid, hearts: hearts.slice(0, imagecount) });
+        res.render('widget', { title: userid, userid: userid, hearts: hearts.slice(0, imagecount) });
     });    
 };
