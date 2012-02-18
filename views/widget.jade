@@ -3,8 +3,10 @@
         - hearts.forEach(function(item){
             li
                 a(href= item.link
-                    target="_parent")
-                    img(src= item.thumbnail)
+                    target="_parent"
+                    title= item.title)
+                    img(src= item.thumbnail
+                        alt= item.title)
         - })
     .clearfix
     .footer
