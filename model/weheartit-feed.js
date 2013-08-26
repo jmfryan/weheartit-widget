@@ -1,4 +1,4 @@
-var FeedParser = require('feedparser')
+var FeedParser = require('feedparser');
 
 HeartFeed = function(username) {
     if(username === undefined)
@@ -8,14 +8,15 @@ HeartFeed = function(username) {
 };
 
 HeartFeed.prototype._getBigImage = function(description) {
-    var regex = /src="(.*)_large\.(.*)"/
+    var regex = /src="([^"]+)"/;
     var match = regex.exec(description);
-    return match[1] + "_large." + match[2];};
+    return match[1];
+};
 
 HeartFeed.prototype._getThumbnail = function(description) {
-    var regex = /src="(.*)_large\.(.*)"/
+    var regex = /src="([^"]+)"/;
     var match = regex.exec(description);
-    return match[1] + "_tiny." + match[2];
+    return match[1].replace('large', 'tiny');
 };
 
 HeartFeed.prototype.get = function(finished) {
@@ -24,7 +25,11 @@ HeartFeed.prototype.get = function(finished) {
 
     parser = new FeedParser();
 
-    parser.on('article', function(article){ 
+    parser.on('article', function(article){
+        console.log("article title is " + article.title);
+        console.log("article link is " + article.link);
+        console.log("article description is " + article.description);
+
         var item = {
             title: article.title,
             link: article.link,
@@ -33,8 +38,8 @@ HeartFeed.prototype.get = function(finished) {
         };
         ret.push(item);
     });
-    
-    parser.parseFile('http://weheartit.com/'+ this.username + '.rss', function() { finished(ret) });
+
+    parser.parseFile('http://weheartit.com/'+ this.username + '.rss', function() { finished(ret); });
 };
 
 exports.HeartFeed = HeartFeed;
